@@ -1,7 +1,6 @@
 package it.echo.kira.module.impl;
 
 import it.echo.kira.event.impl.KeyPressEvent;
-import it.echo.kira.gui.demo.HostWorldDemoScreen;
 import it.echo.kira.gui.demo.LayoutDemoScreen;
 import it.echo.kira.module.Module;
 import it.echo.kira.module.ModuleCategory;
@@ -26,7 +25,7 @@ public class DemoGuiModule extends Module {
         if (minecraft == null) {
             return;
         }
-        if (minecraft.currentScreen instanceof HostWorldDemoScreen) {
+        if (minecraft.currentScreen instanceof LayoutDemoScreen) {
             minecraft.displayGuiScreen(null);
             return;
         }
