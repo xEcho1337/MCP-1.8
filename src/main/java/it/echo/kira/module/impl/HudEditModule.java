@@ -28,14 +28,15 @@ public class HudEditModule extends Module {
     @Override
     protected void onEnable() {
         MC.displayGuiScreen(new HudEditScreen());
-        toggle();
     }
 
     @Override
     protected void onDisable() {
         Kira.hud().editMode(false);
         Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft != null && minecraft.currentScreen == null) {
+        if (minecraft != null && minecraft.currentScreen instanceof HudEditScreen) {
+            minecraft.displayGuiScreen(null);
+        } else if (minecraft != null && minecraft.currentScreen == null) {
             minecraft.setIngameFocus();
         }
     }

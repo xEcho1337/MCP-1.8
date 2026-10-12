@@ -18,7 +18,7 @@ public class DemoGuiModule extends Module {
     }
 
     private void onKeyPress(KeyPressEvent event) {
-        if (event.repeat() || Keyboard.KEY_H == event.keyCode()) {
+        if (event.repeat() || Keyboard.KEY_H != event.keyCode()) {
             return;
         }
         Minecraft minecraft = Minecraft.getMinecraft();
