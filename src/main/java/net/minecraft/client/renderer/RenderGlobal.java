@@ -1384,11 +1384,13 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
         int i = flag ? -1 : this.renderInfos.size();
         int j1 = flag ? -1 : 1;
 
+        int layer = blockLayerIn.ordinal();
+
         for (int j = i1; j != i; j += j1)
         {
-            RenderChunk renderchunk = ((RenderGlobal.ContainerLocalRenderInformation)this.renderInfos.get(j)).renderChunk;
+            RenderChunk renderchunk = this.renderInfos.get(j).renderChunk;
 
-            if (!renderchunk.getCompiledChunk().isLayerEmpty(blockLayerIn))
+            if (!renderchunk.getCompiledChunk().isLayerEmpty(layer))
             {
                 ++l;
                 this.renderContainer.addRenderChunk(renderchunk, blockLayerIn);

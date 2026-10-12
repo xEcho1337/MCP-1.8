@@ -54,6 +54,11 @@ public class CompiledChunk
         return !this.layersUsed[layer.ordinal()];
     }
 
+    public boolean isLayerEmpty(int layer)
+    {
+        return !this.layersUsed[layer];
+    }
+
     public void setLayerStarted(EnumWorldBlockLayer layer)
     {
         this.layersStarted[layer.ordinal()] = true;
