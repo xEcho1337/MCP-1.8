@@ -1646,7 +1646,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
                     if (this.currentScreen == null)
                     {
-                        if (!this.inGameHasFocus && Mouse.getEventButtonState() && !KiraHooks.isHudEditing())
+                        if (!this.inGameHasFocus && Mouse.getEventButtonState() && !KiraHooks.hudEditing())
                         {
                             this.setIngameFocus();
                         }
@@ -1915,7 +1915,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     ;
                 }
             }
-            else if (KiraHooks.isHudEditing())
+            else if (KiraHooks.hudEditing())
             {
                 while (this.gameSettings.keyBindAttack.isPressed())
                 {
@@ -1950,7 +1950,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 }
             }
 
-            if (!KiraHooks.isHudEditing() && this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
+            if (!KiraHooks.hudEditing() && this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
             {
                 this.rightClickMouse();
             }
