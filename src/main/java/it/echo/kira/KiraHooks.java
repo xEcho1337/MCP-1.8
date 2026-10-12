@@ -35,14 +35,24 @@ public final class KiraHooks {
     }
 
     public static void onMousePressed(int button, int mouseX, int mouseY) {
+        if (button == -1) {
+            return;
+        }
         Kira.fire(new MousePressEvent(button, mouseX, mouseY));
         // HUD drag gets first chance in edit mode
         Kira.hud().mousePressed(mouseX, mouseY, button);
     }
 
     public static void onMouseReleased(int button, int mouseX, int mouseY) {
+        if (button == -1) {
+            return;
+        }
         Kira.fire(new MouseReleaseEvent(button, mouseX, mouseY));
         Kira.hud().mouseReleased();
+    }
+
+    public static void onGuiMouseMoved(int mouseX, int mouseY, int screenWidth, int screenHeight) {
+        Kira.hud().mouseMoved(mouseX, mouseY, screenWidth, screenHeight);
     }
 
     public static void onTick() {
@@ -54,7 +64,7 @@ public final class KiraHooks {
      *
      * @return edit mode flag
      */
-    public static boolean isHudEditing() {
+    public static boolean hudEditing() {
         return Kira.hud().editMode();
     }
 

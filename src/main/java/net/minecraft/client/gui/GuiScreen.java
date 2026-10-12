@@ -3,13 +3,13 @@ package net.minecraft.client.gui;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import it.echo.kira.KiraHooks;
+import it.echo.kira.gui.Render2D;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.EntityList;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -24,6 +24,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,6 +62,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     private long lastMouseEvent;
     private int touchValue;
     private URI clickedLinkURI;
+    private DynamicTexture skyboxViewport;
+    private ResourceLocation skyboxBackground;
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
@@ -514,6 +517,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
             this.eventButton = k;
             this.lastMouseEvent = Minecraft.getSystemTime();
             this.mouseClicked(i, j, this.eventButton);
+            KiraHooks.onMousePressed(this.eventButton, i, j);
         }
         else if (k != -1)
         {
@@ -524,11 +528,13 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
             this.eventButton = -1;
             this.mouseReleased(i, j, k);
+            KiraHooks.onMouseReleased(k, i, j);
         }
         else if (this.eventButton != -1 && this.lastMouseEvent > 0L)
         {
             long l = Minecraft.getSystemTime() - this.lastMouseEvent;
             this.mouseClickMove(i, j, this.eventButton, l);
+            KiraHooks.onGuiMouseMoved(i, j, this.width, this.height);
         }
     }
 
@@ -569,19 +575,14 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
     public void drawBackground(int tint)
     {
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        this.mc.getTextureManager().bindTexture(optionsBackground);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        float f = 32.0F;
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        worldrenderer.pos(0.0D, (double)this.height, 0.0D).tex(0.0D, (double)((float)this.height / 32.0F + (float)tint)).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos((double)this.width, (double)this.height, 0.0D).tex((double)((float)this.width / 32.0F), (double)((float)this.height / 32.0F + (float)tint)).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos((double)this.width, 0.0D, 0.0D).tex((double)((float)this.width / 32.0F), (double)tint).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, (double)tint).color(64, 64, 64, 255).endVertex();
-        tessellator.draw();
+        if (this.skyboxViewport == null)
+        {
+            this.skyboxViewport = Render2D.createSkyboxViewport();
+            this.skyboxBackground = Render2D.registerSkyboxViewport(this.mc, this.skyboxViewport);
+        }
+
+        Render2D.renderSkyboxWithOverlay(this.mc, this.skyboxBackground, Render2D.panoramaTime(), this.width,
+                this.height, this.zLevel);
     }
 
     public boolean doesGuiPauseGame()

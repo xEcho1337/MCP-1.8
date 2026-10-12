@@ -71,10 +71,6 @@ public class ModernButton extends Widget {
         return pressed;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
     public String label() {
         return label;
     }
@@ -83,23 +79,11 @@ public class ModernButton extends Widget {
         this.label = label;
     }
 
-    public void setLabel(String label) {
-        label(label);
-    }
-
-    public Style getStyle() {
-        return style;
-    }
-
     public Style style() {
         return style;
     }
 
     public void style(Style style) {
         this.style = style;
-    }
-
-    public void setStyle(Style style) {
-        style(style);
     }
 }

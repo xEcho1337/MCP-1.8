@@ -2,6 +2,7 @@ package it.echo.kira.module.impl;
 
 import it.echo.kira.Kira;
 import it.echo.kira.event.impl.KeyPressEvent;
+import it.echo.kira.gui.impl.HudEditScreen;
 import it.echo.kira.module.Module;
 import it.echo.kira.module.ModuleCategory;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,7 @@ public class HudEditModule extends Module {
     }
 
     private void onKeyPress(KeyPressEvent event) {
-        if (event.repeat() || event.keyCode() != Keyboard.KEY_H) {
+        if (event.repeat() || event.keyCode() != Keyboard.KEY_RSHIFT) {
             return;
         }
         toggle();
@@ -26,11 +27,8 @@ public class HudEditModule extends Module {
 
     @Override
     protected void onEnable() {
-        Kira.hud().editMode(true);
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft != null) {
-            minecraft.setIngameNotInFocus();
-        }
+        MC.displayGuiScreen(new HudEditScreen());
+        toggle();
     }
 
     @Override

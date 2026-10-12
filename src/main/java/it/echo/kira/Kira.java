@@ -53,23 +53,11 @@ public final class Kira {
         return EVENTS;
     }
 
-    public static EventManager getEventManager() {
-        return EVENTS;
-    }
-
     public static ModuleManager modules() {
         return MODULES;
     }
 
-    public static ModuleManager getModuleManager() {
-        return MODULES;
-    }
-
     public static HudManager hud() {
-        return HUD;
-    }
-
-    public static HudManager getHudManager() {
         return HUD;
     }
 }

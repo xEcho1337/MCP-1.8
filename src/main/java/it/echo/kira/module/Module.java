@@ -1,13 +1,14 @@
 package it.echo.kira.module;
 
 import it.echo.kira.Kira;
+import it.echo.kira.MinecraftAccess;
 import it.echo.kira.event.Event;
 import it.echo.kira.event.EventListener;
 
 /**
  * Toggleable module with typed event callbacks.
  */
-public abstract class Module {
+public abstract class Module implements MinecraftAccess {
 
     private final String name;
     private final ModuleCategory category;
@@ -49,15 +50,7 @@ public abstract class Module {
         return name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public ModuleCategory category() {
-        return category;
-    }
-
-    public ModuleCategory getCategory() {
         return category;
     }
 
@@ -69,19 +62,7 @@ public abstract class Module {
         this.keyCode = keyCode;
     }
 
-    public int getKeyCode() {
-        return keyCode;
-    }
-
-    public void setKeyCode(int keyCode) {
-        keyCode(keyCode);
-    }
-
     public boolean enabled() {
-        return enabled;
-    }
-
-    public boolean isEnabled() {
         return enabled;
     }
 
@@ -95,9 +76,5 @@ public abstract class Module {
         } else {
             onDisable();
         }
-    }
-
-    public void setEnabled(boolean enabled) {
-        enabled(enabled);
     }
 }

@@ -35,10 +35,6 @@ public abstract class Widget {
         hovered = Render2D.inside(mouseX, mouseY, x, y, width, height);
     }
 
-    public boolean isHovered() {
-        return hovered;
-    }
-
     public boolean hovered() {
         return hovered;
     }
@@ -97,47 +93,5 @@ public abstract class Widget {
 
     public void shadow(boolean shadow) {
         this.shadow = shadow;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setSize(double width, double height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        visible(visible);
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        enabled(enabled);
     }
 }

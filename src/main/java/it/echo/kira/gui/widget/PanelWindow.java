@@ -116,32 +116,16 @@ public class PanelWindow {
         layoutButtons();
     }
 
-    public double getX() {
-        return x;
-    }
-
     public double x() {
         return x;
-    }
-
-    public double getY() {
-        return y;
     }
 
     public double y() {
         return y;
     }
 
-    public double getWidth() {
-        return width;
-    }
-
     public double width() {
         return width;
-    }
-
-    public double getHeight() {
-        return height;
     }
 
     public double height() {
@@ -180,20 +164,8 @@ public class PanelWindow {
         return titlebarButtons;
     }
 
-    public List<IconButton> getTitlebarButtons() {
-        return titlebarButtons;
-    }
-
-    public IconButton getCloseButton() {
-        return closeButton;
-    }
-
     public IconButton closeButton() {
         return closeButton;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String title() {
@@ -204,10 +176,6 @@ public class PanelWindow {
         this.title = title;
     }
 
-    public void setTitle(String title) {
-        title(title);
-    }
-
     public boolean shadow() {
         return shadow;
     }
@@ -216,19 +184,15 @@ public class PanelWindow {
         this.shadow = shadow;
     }
 
-    public void setPosition(double x, double y) {
-        this.x = x;
-        this.y = y;
-        layoutButtons();
-    }
-
     private void layoutButtons() {
         double buttonY = y + BUTTON_Y_OFFSET;
         double cursorX = x + width - BUTTON_MARGIN - BUTTON_SIZE;
-        closeButton.setPosition(cursorX, buttonY);
+        closeButton.x(cursorX);
+        closeButton.y(buttonY);
         cursorX -= BUTTON_GAP + BUTTON_SIZE;
         for (int i = titlebarButtons.size() - 1; i >= 0; i--) {
-            titlebarButtons.get(i).setPosition(cursorX, buttonY);
+            titlebarButtons.get(i).x(cursorX);
+            titlebarButtons.get(i).y(buttonY);
             cursorX -= BUTTON_GAP + BUTTON_SIZE;
         }
     }

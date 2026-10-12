@@ -46,14 +46,6 @@ public final class HudManager {
         this.editMode = editMode;
     }
 
-    public boolean isEditMode() {
-        return editMode;
-    }
-
-    public void setEditMode(boolean editMode) {
-        editMode(editMode);
-    }
-
     /**
      * Draws every element, plus a move outline when edit mode is on.
      *

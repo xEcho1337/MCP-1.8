@@ -106,8 +106,10 @@ public final class Presets {
      * @param area target area
      */
     public static void place(Widget widget, Rect area) {
-        widget.setPosition(area.x(), area.y());
-        widget.setSize(area.width(), area.height());
+        widget.x(area.x());
+        widget.y(area.y());
+        widget.width(area.width());
+        widget.height(area.height());
     }
 
     /**

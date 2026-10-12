@@ -49,24 +49,12 @@ public class SideNavItem extends Widget {
         return pressed;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
     public boolean selected() {
         return selected;
     }
 
     public void selected(boolean selected) {
         this.selected = selected;
-    }
-
-    public void setSelected(boolean selected) {
-        selected(selected);
-    }
-
-    public String getLabel() {
-        return label;
     }
 
     public String label() {

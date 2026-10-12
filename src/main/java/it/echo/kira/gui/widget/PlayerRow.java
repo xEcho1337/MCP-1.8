@@ -68,19 +68,11 @@ public class PlayerRow extends Widget {
         Render2D.outline(avatarX, avatarY, AVATAR_SIZE, AVATAR_SIZE, AVATAR_OUTLINE);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String name() {
         return name;
     }
 
     public void name(String name) {
         this.name = name;
-    }
-
-    public void setName(String name) {
-        name(name);
     }
 }

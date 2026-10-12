@@ -98,19 +98,11 @@ public class IconButton extends Widget {
         Render2D.rect(centerX - 1.0D, y + 4.0D, 2.0D, height - 8.0D, color);
     }
 
-    public Icon getIcon() {
-        return icon;
-    }
-
     public Icon icon() {
         return icon;
     }
 
     public void icon(Icon icon) {
         this.icon = icon;
-    }
-
-    public void setIcon(Icon icon) {
-        icon(icon);
     }
 }
