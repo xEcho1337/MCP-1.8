@@ -2,10 +2,9 @@ package it.echo.kira.gui.widget;
 
 import it.echo.kira.gui.Palette;
 import it.echo.kira.gui.Render2D;
+import java.awt.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Small 18px titlebar button, icon is configurable by the caller.
@@ -53,69 +52,50 @@ public class IconButton extends Widget {
         return pressed;
     }
 
+    private static final int GLYPH = new Color(224, 224, 224).getRGB();
+    private static final int GLYPH_HOVER = new Color(255, 255, 255).getRGB();
+    private static final int PIXEL = 2;
+
     private void drawGlyph() {
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        GlStateManager.color(0.88F, 0.88F, 0.88F, 1.0F);
-        GL11.glLineWidth(1.5F);
+        int color = hovered ? GLYPH_HOVER : GLYPH;
         switch (icon) {
-            case CLOSE -> drawClose();
-            case POPOUT -> drawPopout();
-            case MINIMIZE -> drawMinimize();
-            case PIN -> drawPin();
+            case CLOSE -> drawClose(color);
+            case POPOUT -> drawPopout(color);
+            case MINIMIZE -> drawMinimize(color);
+            case PIN -> drawPin(color);
         }
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
     }
 
-    private void drawClose() {
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex2d(x + 5.0D, y + 5.0D);
-        GL11.glVertex2d(x + width - 5.0D, y + height - 5.0D);
-        GL11.glVertex2d(x + width - 5.0D, y + 5.0D);
-        GL11.glVertex2d(x + 5.0D, y + height - 5.0D);
-        GL11.glEnd();
+    private void drawClose(int color) {
+        double originX = x + (width - 5 * PIXEL) / 2.0D;
+        double originY = y + (height - 5 * PIXEL) / 2.0D;
+        for (int i = 0; i < 5; i++) {
+            Render2D.rect(originX + i * PIXEL, originY + i * PIXEL, PIXEL, PIXEL, color);
+            Render2D.rect(originX + (4 - i) * PIXEL, originY + i * PIXEL, PIXEL, PIXEL, color);
+        }
     }
 
-    private void drawPopout() {
+    private void drawPopout(int color) {
         double left = x + 5.0D;
-        double top = y + 6.0D;
+        double top = y + 7.0D;
         double right = x + width - 6.0D;
         double bottom = y + height - 5.0D;
-        GL11.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glVertex2d(left, top);
-        GL11.glVertex2d(right, top);
-        GL11.glVertex2d(right, bottom);
-        GL11.glVertex2d(left, bottom);
-        GL11.glEnd();
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex2d(left + 2.0D, top);
-        GL11.glVertex2d(left + 2.0D, top - 2.0D);
-        GL11.glVertex2d(left + 2.0D, top - 2.0D);
-        GL11.glVertex2d(right + 1.0D, top - 2.0D);
-        GL11.glVertex2d(right + 1.0D, top - 2.0D);
-        GL11.glVertex2d(right + 1.0D, bottom - 3.0D);
-        GL11.glEnd();
+        Render2D.rect(left, top, right - left, 1.0D, color);
+        Render2D.rect(left, bottom - 1.0D, right - left, 1.0D, color);
+        Render2D.rect(left, top, 1.0D, bottom - top, color);
+        Render2D.rect(right - 1.0D, top, 1.0D, bottom - top, color);
+        Render2D.rect(left + 3.0D, top - 3.0D, right - left - 3.0D, 2.0D, color);
+        Render2D.rect(right - 2.0D, top - 3.0D, 2.0D, bottom - top - 1.0D, color);
     }
 
-    private void drawMinimize() {
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex2d(x + 5.0D, y + height - 6.0D);
-        GL11.glVertex2d(x + width - 5.0D, y + height - 6.0D);
-        GL11.glEnd();
+    private void drawMinimize(int color) {
+        Render2D.rect(x + 4.0D, y + height - 6.0D, width - 8.0D, PIXEL, color);
     }
 
-    private void drawPin() {
+    private void drawPin(int color) {
         double centerX = x + width / 2.0D;
-        GL11.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glVertex2d(centerX - 3.0D, y + 4.0D);
-        GL11.glVertex2d(centerX + 3.0D, y + 4.0D);
-        GL11.glVertex2d(centerX + 1.5D, y + 9.0D);
-        GL11.glVertex2d(centerX + 1.5D, y + height - 4.0D);
-        GL11.glVertex2d(centerX - 1.5D, y + height - 4.0D);
-        GL11.glVertex2d(centerX - 1.5D, y + 9.0D);
-        GL11.glEnd();
+        Render2D.rect(centerX - 3.0D, y + 4.0D, 6.0D, 3.0D, color);
+        Render2D.rect(centerX - 1.0D, y + 4.0D, 2.0D, height - 8.0D, color);
     }
 
     public Icon getIcon() {

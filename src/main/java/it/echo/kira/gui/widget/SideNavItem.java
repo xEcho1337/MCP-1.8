@@ -37,7 +37,7 @@ public class SideNavItem extends Widget {
         } else if (hovered && enabled) {
             color = Palette.TEXT_PRIMARY;
         }
-        UiText.draw(font, label, (float) x, (float) (y + (height - 8.0D) / 2.0D), color);
+        UiText.draw(font, label, (float) x, (float) (y + (height - 8.0D) / 2.0D), color, shadow);
     }
 
     @Override

@@ -29,9 +29,9 @@ public final class Palette {
     public static final int BUTTON_GREEN_BG_HOVER = new Color(58, 115, 64).getRGB();
     public static final int BUTTON_GREEN_BORDER = new Color(76, 175, 80).getRGB();
 
-    public static final int BUTTON_BLUE_BG = new Color(46, 74, 107).getRGB();
-    public static final int BUTTON_BLUE_BG_HOVER = new Color(58, 93, 134).getRGB();
-    public static final int BUTTON_BLUE_BORDER = new Color(91, 155, 213).getRGB();
+    public static final int BUTTON_BLUE_BG = new Color(36, 67, 103).getRGB();
+    public static final int BUTTON_BLUE_BG_HOVER = new Color(43, 74, 111).getRGB();
+    public static final int BUTTON_BLUE_BORDER = new Color(68, 137, 197).getRGB();
 
     public static final int BUTTON_DARK_BG = new Color(58, 58, 58).getRGB();
     public static final int BUTTON_DARK_BG_HOVER = new Color(69, 69, 69).getRGB();

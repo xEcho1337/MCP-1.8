@@ -1,5 +1,6 @@
 package it.echo.kira.gui.layout;
 
+import it.echo.kira.gui.Render2D;
 import it.echo.kira.gui.widget.Widget;
 import java.util.List;
 
@@ -80,6 +81,22 @@ public final class Presets {
         List<Rect> rows = Layout.vertical(Constraint.length(headerHeight), Constraint.fill(1),
                 Constraint.length(footerHeight)).spacing(gap).split(window);
         return new HeaderBodyFooter(rows.get(0), rows.get(1), rows.get(2));
+    }
+
+    /**
+     * Fills the app body with two tones plus divider.
+     *
+     * @param app split areas
+     * @param sidebarBg sidebar fill
+     * @param contentBg content fill
+     * @param divider divider line color
+     */
+    public static void paintAppWindow(AppWindow app, int sidebarBg, int contentBg, int divider) {
+        Rect sidebar = app.sidebar();
+        Rect content = app.content();
+        Render2D.rect(sidebar.x(), sidebar.y(), sidebar.width(), sidebar.height(), sidebarBg);
+        Render2D.rect(content.x(), content.y(), content.width(), content.height(), contentBg);
+        Render2D.verticalLine(content.x(), sidebar.y(), sidebar.y() + sidebar.height(), divider);
     }
 
     /**

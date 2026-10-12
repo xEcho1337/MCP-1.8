@@ -16,6 +16,7 @@ public abstract class Widget {
     protected boolean visible = true;
     protected boolean enabled = true;
     protected boolean hovered;
+    protected boolean shadow = true;
 
     protected Widget(double x, double y, double width, double height) {
         this.x = x;
@@ -66,6 +67,10 @@ public abstract class Widget {
         return enabled;
     }
 
+    public boolean shadow() {
+        return shadow;
+    }
+
     public void x(double x) {
         this.x = x;
     }
@@ -88,6 +93,10 @@ public abstract class Widget {
 
     public void enabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void shadow(boolean shadow) {
+        this.shadow = shadow;
     }
 
     public double getX() {

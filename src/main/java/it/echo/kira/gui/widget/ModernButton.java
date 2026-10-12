@@ -3,6 +3,7 @@ package it.echo.kira.gui.widget;
 import it.echo.kira.gui.Palette;
 import it.echo.kira.gui.Render2D;
 import it.echo.kira.gui.UiText;
+import java.awt.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -55,9 +56,10 @@ public class ModernButton extends Widget {
         Render2D.rect(x, y, width, height, background);
         Render2D.outline(x, y, width, height, enabled ? style.border : Palette.HAIRLINE);
         // Subtle top highlight for a less flat look
-        Render2D.rect(x + 1.0D, y + 1.0D, width - 2.0D, 1.0D, 0x22FFFFFF);
+        Render2D.rect(x + 1.0D, y + 1.0D, width - 2.0D, 1.0D, new Color(255, 255, 255, 34).getRGB());
         int textColor = enabled ? Palette.TEXT_PRIMARY : Palette.TEXT_FAINT;
-        UiText.drawCentered(font, label, (float) (x + width / 2.0D), (float) (y + (height - 8.0D) / 2.0D), textColor);
+        UiText.drawCentered(font, label, (float) (x + width / 2.0D), (float) (y + (height - 8.0D) / 2.0D), textColor,
+                shadow);
     }
 
     @Override

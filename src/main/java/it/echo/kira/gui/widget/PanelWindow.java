@@ -29,6 +29,7 @@ public class PanelWindow {
     private String title;
     private double x;
     private double y;
+    private boolean shadow = true;
 
     public PanelWindow(double x, double y, double width, double height, String title) {
         this.x = x;
@@ -55,7 +56,7 @@ public class PanelWindow {
         Render2D.rect(x + 1.0D, y + 1.0D, width - 2.0D, TITLEBAR_HEIGHT, Palette.TITLEBAR_BG);
         Render2D.rect(x + 1.0D, y + 1.0D + TITLEBAR_HEIGHT, width - 2.0D, 1.0D, Palette.SIDEBAR_DIVIDER);
         UiText.draw(font, title, (float) (x + PADDING), (float) (y + (TITLEBAR_HEIGHT - 8.0D) / 2.0D),
-                Palette.TEXT_PRIMARY);
+                Palette.TEXT_PRIMARY, shadow);
 
         for (IconButton button : titlebarButtons) {
             button.draw(minecraft, font, mouseX, mouseY, partialTicks);
@@ -205,6 +206,14 @@ public class PanelWindow {
 
     public void setTitle(String title) {
         title(title);
+    }
+
+    public boolean shadow() {
+        return shadow;
+    }
+
+    public void shadow(boolean shadow) {
+        this.shadow = shadow;
     }
 
     public void setPosition(double x, double y) {

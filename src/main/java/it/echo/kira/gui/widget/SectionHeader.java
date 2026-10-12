@@ -24,7 +24,7 @@ public class SectionHeader extends Widget {
         if (!visible) {
             return;
         }
-        UiText.draw(font, title, (float) x, (float) y, Palette.TEXT_DIM);
+        UiText.draw(font, title, (float) x, (float) y, Palette.TEXT_DIM, shadow);
         int titleWidth = font.getStringWidth(title);
         double lineX = x + titleWidth + gap;
         double lineWidth = width - titleWidth - gap;
@@ -33,8 +33,12 @@ public class SectionHeader extends Widget {
         }
     }
 
-    public String getTitle() {
-        return title;
+    public int gap() {
+        return gap;
+    }
+
+    public void gap(int gap) {
+        this.gap = gap;
     }
 
     public String title() {
@@ -43,9 +47,5 @@ public class SectionHeader extends Widget {
 
     public void title(String title) {
         this.title = title;
-    }
-
-    public void setTitle(String title) {
-        title(title);
     }
 }

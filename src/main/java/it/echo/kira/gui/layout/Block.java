@@ -15,6 +15,7 @@ public final class Block {
     private final int border;
     private final boolean bordered;
     private final int padding;
+    private final boolean shadow;
 
     private Block(Builder builder) {
         this.title = builder.title;
@@ -22,6 +23,7 @@ public final class Block {
         this.border = builder.border;
         this.bordered = builder.bordered;
         this.padding = builder.padding;
+        this.shadow = builder.shadow;
     }
 
     /**
@@ -57,7 +59,7 @@ public final class Block {
         }
         if (title != null && !title.isEmpty() && font != null) {
             int textY = area.y() + 4;
-            UiText.draw(font, title, (float) (area.x() + 6), (float) textY, Palette.TEXT_DIM);
+            UiText.draw(font, title, (float) (area.x() + 6), (float) textY, Palette.TEXT_DIM, shadow);
         }
     }
 
@@ -77,6 +79,10 @@ public final class Block {
         return title;
     }
 
+    public boolean shadow() {
+        return shadow;
+    }
+
     /**
      * Fluent builder.
      */
@@ -87,6 +93,7 @@ public final class Block {
         private int background;
         private int border = Palette.BORDER;
         private int padding;
+        private boolean shadow = true;
 
         private Builder(boolean bordered) {
             this.bordered = bordered;
@@ -133,6 +140,17 @@ public final class Block {
          */
         public Builder padding(int padding) {
             this.padding = Math.max(0, padding);
+            return this;
+        }
+
+        /**
+         * Toggles title shadow.
+         *
+         * @param shadow true for shadowed text
+         * @return this builder
+         */
+        public Builder shadow(boolean shadow) {
+            this.shadow = shadow;
             return this;
         }
 
