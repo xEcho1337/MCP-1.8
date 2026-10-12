@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.2.1'
+}
+
+group = 'it.echo'
+version = '1.8.9'
+description = 'Gradle MCP 1.8.9'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://libraries.minecraft.net/' }
+    maven { url 'https://repo.marcloud.net/' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.Querz:NBT:6.1'
+    implementation 'io.netty:netty-all:4.1.139.Final'
+    implementation 'io.netty:netty-transport-native-epoll:4.1.139.Final:linux-x86_64'
+    implementation 'net.sf.jopt-simple:jopt-simple:5.0.4'
+    implementation 'org.lwjgl:lwjgl:2.9.4-nightly'
+    implementation 'org.lwjgl:util:2.9.4-nightly'
+    implementation 'net.java.jinput:jinput:2.0.10'
+    implementation 'com.mojang:icu4j-core-mojang:51.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.16'
+    implementation 'oshi:oshi-core:1.1'
+    implementation 'net.java.dev.jna:jna:5.19.1'
+    implementation 'net.java.dev.jna:jna-platform:5.19.1'
+    implementation 'net.java.jutils:jutils:1.0.0'
+    implementation 'commons-logging:commons-logging:1.4.0'
+    implementation 'org.apache.commons:commons-compress:1.28.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.26.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.26.1'
+    implementation 'tv.twitch:twitch:6.5'
+    implementation 'com.google.guava:guava:33.7.2-jre'
+    implementation 'org.apache.commons:commons-lang3:3.21.0'
+    implementation 'commons-io:commons-io:2.22.0'
+    implementation 'commons-codec:commons-codec:1.23.0'
+    implementation 'com.google.code.gson:gson:2.14.0'
+    implementation 'com.paulscode:libraryjavasound:20101123'
+    implementation 'com.paulscode:codecwav:20101023'
+    implementation 'com.paulscode:soundsystem:20120107'
+    implementation 'com.paulscode:codecjorbis:20101023'
+    implementation('com.paulscode:librarylwjglopenal:20100824') {
+        // shades nothing, but depends on ancient lwjgl 2.8.3: we use 2.9.4-nightly
+        exclude group: 'org.lwjgl.lwjgl', module: 'lwjgl'
+    }
+    // implementation 'com.mojang:realmsclient:1.7.59'
+    implementation 'com.mojang:authlib:1.5.21'
+}
+
+tasks.named('shadowJar') {
+    archiveClassifier = 'jar-with-dependencies'
+    mergeServiceFiles()
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('shadowJar')
+}
