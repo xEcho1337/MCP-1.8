@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import it.echo.kira.KiraHooks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -322,6 +323,7 @@ public class GuiIngame extends Gui
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
+        KiraHooks.onHudRender(this.mc, partialTicks);
     }
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks)

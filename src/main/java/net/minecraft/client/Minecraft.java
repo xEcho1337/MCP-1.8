@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import it.echo.kira.KiraHooks;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.PropertyMap;
@@ -439,6 +440,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
 
         this.renderGlobal.makeEntityOutlineShader();
+        KiraHooks.init();
     }
 
     private void registerMetadataSerializers()
@@ -1585,6 +1587,23 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 int i = Mouse.getEventButton();
                 KeyBinding.setKeyBindState(i - 100, Mouse.getEventButtonState());
 
+                if (i != -1)
+                {
+                    ScaledResolution kiraResolution = new ScaledResolution(this);
+                    int mouseX = Mouse.getEventX() * kiraResolution.getScaledWidth() / this.displayWidth;
+                    int mouseY = kiraResolution.getScaledHeight() - Mouse.getEventY()
+                            * kiraResolution.getScaledHeight() / this.displayHeight - 1;
+
+                    if (Mouse.getEventButtonState())
+                    {
+                        KiraHooks.onMousePressed(i, mouseX, mouseY);
+                    }
+                    else
+                    {
+                        KiraHooks.onMouseReleased(i, mouseX, mouseY);
+                    }
+                }
+
                 if (Mouse.getEventButtonState())
                 {
                     if (this.thePlayer.isSpectator() && i == 2)
@@ -1627,7 +1646,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
                     if (this.currentScreen == null)
                     {
-                        if (!this.inGameHasFocus && Mouse.getEventButtonState())
+                        if (!this.inGameHasFocus && Mouse.getEventButtonState() && !KiraHooks.isHudEditing())
                         {
                             this.setIngameFocus();
                         }
@@ -1650,6 +1669,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 int k = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey();
                 KeyBinding.setKeyBindState(k, Keyboard.getEventKeyState());
+
+                if (Keyboard.getEventKeyState())
+                {
+                    KiraHooks.onKeyPressed(k, Keyboard.getEventCharacter(), Keyboard.isRepeatEvent());
+                }
+                else if (k != 0)
+                {
+                    KiraHooks.onKeyReleased(k, Keyboard.getEventCharacter());
+                }
 
                 if (Keyboard.getEventKeyState())
                 {
@@ -1887,6 +1915,23 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     ;
                 }
             }
+            else if (KiraHooks.isHudEditing())
+            {
+                while (this.gameSettings.keyBindAttack.isPressed())
+                {
+                    ;
+                }
+
+                while (this.gameSettings.keyBindUseItem.isPressed())
+                {
+                    ;
+                }
+
+                while (this.gameSettings.keyBindPickBlock.isPressed())
+                {
+                    ;
+                }
+            }
             else
             {
                 while (this.gameSettings.keyBindAttack.isPressed())
@@ -1905,7 +1950,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 }
             }
 
-            if (this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
+            if (!KiraHooks.isHudEditing() && this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
             {
                 this.rightClickMouse();
             }
@@ -2012,6 +2057,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
 
         this.mcProfiler.endSection();
+        KiraHooks.onTick();
         this.systemTime = getSystemTime();
     }
 
