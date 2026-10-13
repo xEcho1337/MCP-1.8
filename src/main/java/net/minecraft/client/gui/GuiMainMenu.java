@@ -163,8 +163,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.splashText = "OOoooOOOoooo! Spooky!";
         }
 
-        int i = 24;
-        int j = this.height / 4 + 90;
+        int j = this.height / 4 + 48;
 
         if (this.mc.isDemo())
         {
@@ -318,13 +317,13 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.renderSkyboxBackground();
-        int k = 30;
+        int k = this.height / 4 - 20;
 
         // Kira: use Kira title
         this.mc.getTextureManager().bindTexture(kiraTitleTextures);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        Gui.drawModalRectWithCustomSizedTexture(width / 2 - 64, k + 160, 0, 0, 128, 55, 128, 55);
+        Gui.drawModalRectWithCustomSizedTexture(width / 2 - 64, k, 0, 0, 128, 55, 128, 55);
         /*
         if ((double)this.updateCounter < 1.0)
         {
