@@ -12,7 +12,9 @@ import it.echo.kira.gui.layout.Rect;
 import it.echo.kira.gui.widget.IconButton;
 import it.echo.kira.gui.widget.ModernButton;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -48,6 +50,8 @@ public class AccountsScreen extends GuiScreen {
     private ModernButton removeButton;
     private ModernButton confirmAddButton;
     private ModernButton cancelButton;
+    private ModernButton copyCodeButton;
+    private ModernButton openBrowserButton;
 
     private Account selected;
     private volatile String status = "";
@@ -76,7 +80,8 @@ public class AccountsScreen extends GuiScreen {
                 content.height() - 20 - 24 - 22);
         scroll = 0;
 
-        Rect buttonsPos = new Rect(content.x(), content.y() + content.height() - 18, content.width(), 18);
+        int y = content.y() + content.height() - 18;
+        Rect buttonsPos = new Rect(content.x(), y, content.width(), 18);
         Presets.TwoColumn columns = Presets.twoColumn(buttonsPos, 8);
         Rect left = columns.left();
         Rect right = columns.right();
@@ -105,21 +110,30 @@ public class AccountsScreen extends GuiScreen {
 
         Rect fieldPos = new Rect(content.x(), content.y() + content.height() - 18 - 24,
                 content.width(), 18);
-        nameField = new GuiTextField(0, fontRendererObj, (int) fieldPos.x(), (int) fieldPos.y(),
-                (int) fieldPos.width(), 18);
+        nameField = new GuiTextField(0, fontRendererObj, fieldPos.x(), fieldPos.y(), fieldPos.width(), 18);
         nameField.setMaxStringLength(16);
 
-        confirmAddButton = new ModernButton(content.x(), content.y() + content.height() - 18,
-                content.width() / 2 - 4, 18, "Add", ModernButton.Style.GREEN);
+        confirmAddButton = new ModernButton(content.x(), y,
+                (double) content.width() / 2 - 4, 18, "Add", ModernButton.Style.GREEN);
         confirmAddButton.onClick(this::confirmAddOffline);
-        cancelButton = new ModernButton(content.x() + content.width() / 2 + 4,
-                content.y() + content.height() - 18, content.width() / 2 - 4, 18,
+        cancelButton = new ModernButton(content.x() + (double) content.width() / 2 + 4,
+                y, (double) content.width() / 2 - 4, 18,
                 "Cancel", ModernButton.Style.DARK);
         cancelButton.onClick(() -> {
             msCancelled = true;
             mode = Mode.MAIN;
             status = "";
         });
+
+        // Bottom-left half is free while the Microsoft panel is shown
+        double msHalf = (double) content.width() / 2 - 4;
+        double msSmall = (msHalf - 8) / 2;
+        copyCodeButton = new ModernButton(content.x(), y, msSmall, 18,
+                "Copy Code", ModernButton.Style.DARK);
+        copyCodeButton.onClick(this::copyMicrosoftCode);
+        openBrowserButton = new ModernButton(content.x() + msSmall + 8, y, msSmall, 18,
+                "Open Browser", ModernButton.Style.BLUE);
+        openBrowserButton.onClick(this::openMicrosoftPage);
     }
 
     private void ok(String message) {
@@ -185,6 +199,34 @@ public class AccountsScreen extends GuiScreen {
         thread.start();
     }
 
+    private void copyMicrosoftCode() {
+        MicrosoftAuth.DeviceCode flow = device;
+        if (flow == null) {
+            fail("No code yet");
+            return;
+        }
+        GuiScreen.setClipboardString(flow.userCode());
+        ok("Code copied");
+    }
+
+    private void openMicrosoftPage() {
+        MicrosoftAuth.DeviceCode flow = device;
+        if (flow == null) {
+            fail("No page yet");
+            return;
+        }
+        try {
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop == null || !desktop.isSupported(Desktop.Action.BROWSE)) {
+                fail("Browser open not supported");
+                return;
+            }
+            desktop.browse(new URI(flow.verificationUri()));
+        } catch (Exception e) {
+            fail("Could not open browser");
+        }
+    }
+
     private static String shortError(Exception e) {
         String message = e.getMessage();
         if (message == null || message.isEmpty()) {
@@ -195,7 +237,7 @@ public class AccountsScreen extends GuiScreen {
 
     private int maxScroll(int count) {
         int total = count * (ROW_HEIGHT + ROW_GAP) - ROW_GAP;
-        return Math.max(0, total - (int) listArea.height());
+        return Math.max(0, total - listArea.height());
     }
 
     @Override
@@ -280,6 +322,11 @@ public class AccountsScreen extends GuiScreen {
             UiText.drawCentered(fontRendererObj, "Waiting for approval...",
                     (float) centerX, (float) (listArea.y() + 100), Palette.TEXT_FAINT, false);
         }
+        boolean ready = flow != null;
+        copyCodeButton.enabled(ready);
+        openBrowserButton.enabled(ready);
+        copyCodeButton.draw(mc, fontRendererObj, mouseX, mouseY, partialTicks);
+        openBrowserButton.draw(mc, fontRendererObj, mouseX, mouseY, partialTicks);
         cancelButton.draw(mc, fontRendererObj, mouseX, mouseY, partialTicks);
     }
 
@@ -318,6 +365,8 @@ public class AccountsScreen extends GuiScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         closeButton.mouseClicked(mouseX, mouseY, mouseButton);
         if (mode == Mode.MS_LOGIN) {
+            copyCodeButton.mouseClicked(mouseX, mouseY, mouseButton);
+            openBrowserButton.mouseClicked(mouseX, mouseY, mouseButton);
             cancelButton.mouseClicked(mouseX, mouseY, mouseButton);
             super.mouseClicked(mouseX, mouseY, mouseButton);
             return;
@@ -398,8 +447,8 @@ public class AccountsScreen extends GuiScreen {
             return;
         }
         List<Account> accounts = Kira.accounts().all();
-        scroll = Math.max(0, Math.min(maxScroll(accounts.size()),
-                scroll - Integer.signum(wheel) * (ROW_HEIGHT + ROW_GAP) * 2));
+        scroll = Math.clamp(maxScroll(accounts.size()), 0,
+                scroll - Integer.signum(wheel) * (ROW_HEIGHT + ROW_GAP) * 2);
     }
 
     @Override

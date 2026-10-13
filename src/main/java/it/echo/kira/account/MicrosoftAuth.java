@@ -19,8 +19,8 @@ import java.util.Map;
 public final class MicrosoftAuth {
 
     /** Public Azure app id used by open-source launchers (PrismLauncher). */
-    public static final String CLIENT_ID = "c36a9fb6-4f2a-41ff-90bd-7e771f0440d1";
-    private static final String SCOPE = "XboxLive.signin offline_access";
+    public static final String CLIENT_ID = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb";
+    private static final String SCOPE = "XboxLive.SignIn XboxLive.offline_access";
 
     private static final String DEVICE_CODE_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
     private static final String TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
@@ -47,9 +47,15 @@ public final class MicrosoftAuth {
         form.put("client_id", CLIENT_ID);
         form.put("scope", SCOPE);
         JsonObject json = postForm(DEVICE_CODE_URL, form);
+        String verificationUri = firstPresent(json, "verification_uri", "verification_url");
+        requirePresent(json, "user_code");
+        requirePresent(json, "device_code");
+        if (verificationUri == null) {
+            throw new IOException("Microsoft returned a device flow response without verification URI");
+        }
         return new DeviceCode(
                 json.get("user_code").getAsString(),
-                json.get("verification_uri").getAsString(),
+                verificationUri,
                 json.get("device_code").getAsString(),
                 json.has("interval") ? json.get("interval").getAsInt() : 5);
     }
@@ -79,7 +85,7 @@ public final class MicrosoftAuth {
             }
             String error = json.has("error") ? json.get("error").getAsString() : "";
             if (!error.equals("authorization_pending") && !error.equals("slow_down")) {
-                throw new IOException("Microsoft login failed: " + error);
+                throw new IOException("Microsoft login failed: " + describeError(json));
             }
         }
     }
@@ -159,7 +165,7 @@ public final class MicrosoftAuth {
     private static JsonObject postForm(String url, Map<String, String> form) throws IOException {
         JsonObject json = postFormLenient(url, form);
         if (json.has("error")) {
-            throw new IOException("Request failed: " + json.get("error").getAsString());
+            throw new IOException("Request failed: " + describeError(json));
         }
         return json;
     }
@@ -179,6 +185,7 @@ public final class MicrosoftAuth {
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("Content-Length", Integer.toString(bytes.length));
         connection.setConnectTimeout(15000);
         connection.setReadTimeout(15000);
@@ -241,6 +248,29 @@ public final class MicrosoftAuth {
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             return "";
+        }
+    }
+
+    private static String describeError(JsonObject json) {
+        String error = json.has("error") ? json.get("error").getAsString() : "unknown_error";
+        if (json.has("error_description")) {
+            return error + ": " + json.get("error_description").getAsString();
+        }
+        return error;
+    }
+
+    private static String firstPresent(JsonObject json, String... keys) {
+        for (String key : keys) {
+            if (json.has(key) && !json.get(key).isJsonNull()) {
+                return json.get(key).getAsString();
+            }
+        }
+        return null;
+    }
+
+    private static void requirePresent(JsonObject json, String key) throws IOException {
+        if (!json.has(key) || json.get(key).isJsonNull()) {
+            throw new IOException("Microsoft returned an unexpected response (missing " + key + ")");
         }
     }
 
