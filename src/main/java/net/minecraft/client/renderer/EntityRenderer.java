@@ -3,6 +3,7 @@ package net.minecraft.client.renderer;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
+import it.echo.kira.KiraHooks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -1625,6 +1626,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
 
             renderglobal.renderEntities(entity, icamera, partialTicks);
+            KiraHooks.onWorldRender(partialTicks);
 
             if (Reflector.ForgeHooksClient_setRenderPass.exists())
             {

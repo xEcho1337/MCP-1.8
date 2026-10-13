@@ -6,6 +6,7 @@ import it.echo.kira.event.impl.KeyReleaseEvent;
 import it.echo.kira.event.impl.MousePressEvent;
 import it.echo.kira.event.impl.MouseReleaseEvent;
 import it.echo.kira.event.impl.RenderHudEvent;
+import it.echo.kira.event.impl.RenderWorldEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -66,6 +67,19 @@ public final class KiraHooks {
      */
     public static boolean hudEditing() {
         return Kira.hud().editMode();
+    }
+
+    /**
+     * Fires the world overlay event, called after entities render.
+     *
+     * @param partialTicks render partial ticks
+     */
+    public static void onWorldRender(float partialTicks) {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        if (minecraft == null || minecraft.theWorld == null) {
+            return;
+        }
+        Kira.fire(new RenderWorldEvent(partialTicks));
     }
 
     /**

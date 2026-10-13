@@ -1,5 +1,6 @@
 package it.echo.kira.hud;
 
+import it.echo.kira.MinecraftAccess;
 import it.echo.kira.gui.Render2D;
 import it.echo.kira.gui.widget.Widget;
 import net.minecraft.client.Minecraft;
@@ -8,7 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 /**
  * Widget that can be moved with the mouse while HUD edit mode is on.
  */
-public abstract class HudElement extends Widget {
+public abstract class HudElement extends Widget implements MinecraftAccess {
 
     private boolean dragging;
     private double dragOffsetX;
