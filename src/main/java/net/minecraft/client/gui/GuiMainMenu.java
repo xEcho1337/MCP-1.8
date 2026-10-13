@@ -251,6 +251,11 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.mc.displayGuiScreen(new GuiMultiplayer(this));
         }
 
+        if (button.id == 3)
+        {
+            this.mc.displayGuiScreen(new it.echo.kira.gui.impl.AccountsScreen());
+        }
+
         if (button.id == 4)
         {
             this.mc.shutdown();
