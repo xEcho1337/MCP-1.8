@@ -8,8 +8,9 @@ import it.echo.kira.hud.impl.ArmorElement;
 import it.echo.kira.hud.impl.PotionEffects;
 import it.echo.kira.hud.impl.WatermarkElement;
 import it.echo.kira.module.ModuleManager;
-import it.echo.kira.module.impl.DemoGuiModule;
-import it.echo.kira.module.impl.HudEditModule;
+import it.echo.kira.module.impl.DemoGui;
+import it.echo.kira.module.impl.EditHUD;
+import it.echo.kira.module.impl.Animations;
 import it.echo.kira.module.impl.PearlCrumbs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -37,9 +38,10 @@ public final class Kira {
         }
         initialized = true;
 
-        MODULES.register(new DemoGuiModule());
-        MODULES.register(new HudEditModule());
+        MODULES.register(new DemoGui());
+        MODULES.register(new EditHUD());
         MODULES.register(new PearlCrumbs());
+        MODULES.register(new Animations());
 
         ScaledResolution resolution = new ScaledResolution(Minecraft.getMinecraft());
         HUD.add(new WatermarkElement(6.0D, 6.0D));

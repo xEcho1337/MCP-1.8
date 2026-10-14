@@ -10,9 +10,9 @@ import org.lwjgl.input.Keyboard;
 /**
  * Opens the demo window on right-shift.
  */
-public class DemoGuiModule extends Module {
+public class DemoGui extends Module {
 
-    public DemoGuiModule() {
+    public DemoGui() {
         super("DemoGui", ModuleCategory.MISC);
         listen(KeyPressEvent.class, this::onKeyPress);
     }

@@ -1,6 +1,7 @@
 package it.echo.kira.gui.impl;
 
 import it.echo.kira.Kira;
+import it.echo.kira.module.impl.EditHUD;
 import it.echo.kira.gui.Palette;
 import it.echo.kira.gui.Render2D;
 import it.echo.kira.gui.UiText;
@@ -45,8 +46,9 @@ public class HudEditScreen extends GuiScreen {
     public void onGuiClosed() {
         Kira.hud().mouseReleased();
         Kira.hud().editMode(false);
-        if (Kira.modules().byName("HudEdit") != null) {
-            Kira.modules().byName("HudEdit").enabled(false);
+        EditHUD editHUD = Kira.modules().get(EditHUD.class);
+        if (editHUD != null) {
+            editHUD.enabled(false);
         }
     }
 }

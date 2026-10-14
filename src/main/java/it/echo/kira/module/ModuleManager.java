@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Stores modules by lowercase name.
+ * Stores modules by their concrete class.
  */
 public final class ModuleManager {
 
-    private final Map<String, Module> modules = new LinkedHashMap<>();
+    private final Map<Class<? extends Module>, Module> modules = new LinkedHashMap<>();
 
     /**
      * Registers a module instance.
@@ -18,20 +18,17 @@ public final class ModuleManager {
      * @param module module to store
      */
     public void register(Module module) {
-        modules.put(module.name().toLowerCase(), module);
+        modules.put(module.getClass(), module);
     }
 
     /**
-     * Finds a module by name, case-insensitive.
+     * Finds a module by its concrete class.
      *
-     * @param name module name
+     * @param type module class
      * @return module or null
      */
-    public Module byName(String name) {
-        if (name == null) {
-            return null;
-        }
-        return modules.get(name.toLowerCase());
+    public <T extends Module> T get(Class<T> type) {
+        return type.cast(modules.get(type));
     }
 
     /**

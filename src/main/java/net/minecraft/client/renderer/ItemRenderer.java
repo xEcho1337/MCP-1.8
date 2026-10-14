@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import it.echo.kira.Kira;
+import it.echo.kira.module.impl.Animations;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -265,9 +267,16 @@ public class ItemRenderer
         GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
         float f = MathHelper.sin(swingProgress * swingProgress * (float)Math.PI);
         float f1 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float)Math.PI);
-        GlStateManager.rotate(f * -20.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(f1 * -20.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);
+        Animations animations = Kira.modules().get(Animations.class);
+        if (animations != null && animations.enabled()) {
+            // The 1.7 arm swing: a pronounced horizontal sweep and no pitch dip.
+            GlStateManager.rotate(f1 * 70.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(f * -20.0F, 0.0F, 0.0F, 1.0F);
+        } else {
+            GlStateManager.rotate(f * -20.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(f1 * -20.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);
+        }
         GlStateManager.scale(0.4F, 0.4F, 0.4F);
     }
 

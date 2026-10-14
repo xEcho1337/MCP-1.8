@@ -11,10 +11,10 @@ import org.lwjgl.input.Keyboard;
 /**
  * Toggles HUD edit mode so {@code HudElement} instances can be dragged.
  */
-public class HudEditModule extends Module {
+public class EditHUD extends Module {
 
-    public HudEditModule() {
-        super("HudEdit", ModuleCategory.RENDER);
+    public EditHUD() {
+        super("Edit HUD", ModuleCategory.RENDER);
         listen(KeyPressEvent.class, this::onKeyPress);
     }
 
